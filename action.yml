@@ -10,6 +10,10 @@ inputs:
     description: "Name of the branch that will be used for storage"
     required: false
     default: 'gh-storage'
+  overwrite:
+    description: "If true, deletes as well as adds or updates files, otherwise only adds"
+    required: false
+    default: false
   src:
     description: "Path to the file that will be saved"
     required: true
@@ -33,3 +37,4 @@ runs:
         dst: "${{inputs.dst}}"
         comment: "${{inputs.comment}}"
         storage_branch: "${{inputs.storage-branch}}"
+        overwrite: false
