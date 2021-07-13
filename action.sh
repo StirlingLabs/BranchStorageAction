@@ -48,7 +48,6 @@ append-storage(){
 
 	# add, commit and push the new content
 	git add .
-	git commit -m "$comment"
 	( git commit -m "$comment" && git push origin HEAD:$storage_branch ) || echo "No changes in storage branch." > /dev/stderr
 	
 	# go back to the working directory
