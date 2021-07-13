@@ -23,7 +23,7 @@ inputs:
   comment:
     description: "Commit message associated with this modification in storage branch"
     required: false
-    default: Update a file
+    default: Update storage contents
 
 runs:
   

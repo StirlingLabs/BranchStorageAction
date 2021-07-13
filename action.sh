@@ -5,33 +5,26 @@ checkout-storage-branch(){
 	# get default remote url
 	remote_url=$(git remote get-url origin)
 
-	local_branch_name=$storage_branch-$(date +%s)
-
 	# clone repo in another directory
-	worktree_path=/tmp/$local_branch_name
+	worktree_path=/tmp/$storage_branch-$(date +%s)
 	
-	# virtually create an orphan branch
-	empty_tree=$(git hash-object -w -t tree /dev/null)
-	empty_commit=$(git commit-tree "$empty_tree" -m "Created storage branch.")	
+	# if the branch already exists, grab it
+	git fetch -f --update-shallow origin $storage_branch
 
-	# create the worktree's directory
-	mkdir -p $worktree_path
-	
-	# create a worktree for the orphan
-	git worktree add -b $local_branch_name $worktree_path $empty_commit
-	
-	# enter the worktree
-	cd $storage_local_path
-	
-	# fetch any existing storage branch, sync up the worktree with the storage branch if it exists on the origin
-    git pull -f --update-shallow origin $storage_branch || echo "Creating new storage branch." > /dev/stderr
-	
-	git branch -vv
+	if [ $? -ne 0 ]; then
+		# virtually create an orphan branch
+		empty_tree=$(git hash-object -w -t tree /dev/null)
+		empty_commit=$(git commit-tree "$empty_tree" -m "Created storage branch.")	
 
-	ls -la
-	
-	# exit the worktree
-	cd -
+		# create the worktree's directory
+		mkdir -p $worktree_path
+		
+		# create a worktree for the orphan
+		git worktree add -b $storage_branch $worktree_path $empty_commit	
+	else
+		# use the existing branch
+		git worktree add --checkout --track $worktree_path $storage_branch
+	fi
 	
 	# return the worktree path
 	echo $worktree_path
@@ -52,8 +45,6 @@ append-storage(){
 
 	# get back to the worktree root
 	cd $storage_local_path
-
-	ls -la
 
 	# add, commit and push the new content
 	git add .
@@ -96,6 +87,10 @@ overwrite-storage(){
 
 
 main(){
+	if [[ "$CI" == "true" ]]; then
+		git config --global user.email storage@github.action
+		git config --global user.name "GitHub storage action"
+	fi
 
 	# Create or checkout the storage branch in a worktree
 	checkout-storage-branch storage_local_path
@@ -109,13 +104,13 @@ main(){
 
 	cd $storage_local_path
 
-	local_branch_name=$(git branch --show-current)
+	storage_branch=$(git branch --show-current)
 
 	cd -
 
 	git worktree remove -f $storage_local_path
 
-	git branch -D $local_branch_name
+	git branch -D $storage_branch
 
 	rm -rf $storage_local_path
 }

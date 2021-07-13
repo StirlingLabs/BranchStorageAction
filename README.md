@@ -17,13 +17,15 @@
       
       # Store this asset in 'gh-storage' branch.
       - name: Save file in a new orphan storage branch
-        uses: sylvanld/action-storage@v1
+        uses: StirlingLabs/action-storage@master
         with:
           src: license-MIT-blue
           dst: legal/LICENSE
 ```
 
 Badge generated in this action can then be referenced from your README or anywhere else...
+
+The `src` and `dst` parameters are passed to `cp -r` so they can be a single file or full directory trees.
 
 
 ## 📗 Parameters
@@ -33,6 +35,7 @@ Badge generated in this action can then be referenced from your README or anywhe
 |src|Relative or absolute path to the file that must be saved in storage-branch|
 |dst|Path relative to storage branch root where the file (or folder) will be stored. If destination folder doesn't exists it is automatically created.|
 |storage-branch|Name of the branch used as storage branch (defaults to 'gh-storage', you can have multiple in differents jobs).|
+|overwrite|If true, deletes as well as adds or updates files, otherwise only adds new files and updates existing ones.|
 |comment|Message that will be used to document commit associated with this change.|
 
 ## 🔥 Roadmap
