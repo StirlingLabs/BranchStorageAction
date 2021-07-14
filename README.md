@@ -1,4 +1,4 @@
-# File-storage action
+# 🎋 Branch Storage Action
 
 > Store files on an orphan branch of a repo dedicated for static storage
 
@@ -27,8 +27,7 @@ Badge generated in this action can then be referenced from your README or anywhe
 
 The `src` and `dst` parameters are passed to `cp -r` so they can be a single file or full directory trees.
 
-
-## 📗 Parameters
+## Parameters
 
 |Name|Function|
 |-|-|
@@ -37,7 +36,3 @@ The `src` and `dst` parameters are passed to `cp -r` so they can be a single fil
 |storage-branch|Name of the branch used as storage branch (defaults to 'gh-storage', you can have multiple in differents jobs).|
 |overwrite|If true, deletes as well as adds or updates files, otherwise only adds new files and updates existing ones.|
 |comment|Message that will be used to document commit associated with this change.|
-
-## 🔥 Roadmap
-
-- Automated tests
