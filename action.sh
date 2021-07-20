@@ -95,7 +95,7 @@ main(){
 	checkout-storage-branch storage_local_path
 	echo "Local storage path: $storage_local_path" > /dev/stderr
 	
-	if [[ "$overwrite" != 'true' ]]; then
+	if [[ "$prune" != 'true' ]]; then
 		append-storage $storage_local_path
 	else
 		overwrite-storage $storage_local_path
