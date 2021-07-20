@@ -1,16 +1,16 @@
-name: 'Static files storage'
+name: 'Branch Storage Action'
 description: 'Saves files (e.g: badges) from GitHub actions on a dedicated branch to serve a static storage.'
 
 branding:
   icon: "box"
-  color: "gray-dark"
+  color: "blue"
 
 inputs:
   storage-branch:
     description: "Name of the branch that will be used for storage"
     required: false
     default: 'gh-storage'
-  overwrite:
+  prune:
     description: "If true, deletes as well as adds or updates files, otherwise only adds"
     required: false
     default: false
@@ -37,4 +37,4 @@ runs:
         dst: "${{inputs.dst}}"
         comment: "${{inputs.comment}}"
         storage_branch: "${{inputs.storage-branch}}"
-        overwrite: false
+        prune: "${{inputs.prune}}"
