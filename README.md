@@ -17,7 +17,7 @@
       
       # Store this asset in 'gh-storage' branch.
       - name: Save file in a new orphan storage branch
-        uses: StirlingLabs/action-storage@main
+        uses: StirlingLabs/BranchStorageAction@main
         with:
           src: license-MIT-blue
           dst: legal/LICENSE
