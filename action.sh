@@ -55,10 +55,10 @@ append-storage(){
 }
 
 
-overwrite-storage(){
+prune-storage(){
 	storage_local_path="$1"
 
-	echo "Overwriting content in $storage_branch:$dst" > /dev/stderr
+	echo "Pruning missing and appending new content in $storage_branch:$dst" > /dev/stderr
 
 	abs_dst_path=$storage_local_path/$dst
 
@@ -98,7 +98,7 @@ main(){
 	if [[ "$prune" != 'true' ]]; then
 		append-storage $storage_local_path
 	else
-		overwrite-storage $storage_local_path
+		prune-storage $storage_local_path
 	fi
 
 	cd $storage_local_path
