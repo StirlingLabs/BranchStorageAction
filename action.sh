@@ -85,7 +85,7 @@ prune-storage(){
 
 main(){
 	if [[ "$CI" == "true" ]]; then
-		git config --global user.email branch.storage@github.action
+		git config --global user.email $useremail
 		git config --global user.name $username
 	fi
 
