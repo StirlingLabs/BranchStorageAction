@@ -87,8 +87,8 @@ prune-storage(){
 
 main(){
 	if [[ "$CI" == "true" ]]; then
-		git config --global user.email storage@github.action
-		git config --global user.name "GitHub storage action"
+		git config --global user.email branch.storage@github.action
+		git config --global user.name "Branch Storage Action"
 	fi
 
 	# Create or checkout the storage branch in a worktree
