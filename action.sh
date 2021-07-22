@@ -74,8 +74,6 @@ prune-storage(){
 	# get back to the worktree root
 	cd $storage_local_path
 
-	ls -la
-
 	# add, commit and push the new content
 	git add -A .
 	( git commit -m "$comment" && git push origin HEAD:$storage_branch ) || echo "No changes in storage branch." > /dev/stderr
