@@ -36,4 +36,5 @@ The `src` and `dst` parameters are passed to `cp -r` so they can be a single fil
 |storage-branch|Name of the branch used as storage branch (defaults to 'gh-storage', you can have multiple in differents jobs).|
 |prune|If true, deletes as well as adds or updates files, otherwise only adds new files and updates existing ones.|
 |comment|Message that will be used to document commit associated with this change.|
-|username|Git username that will appear in history applying changes to the storage branch.|
+|username|Username that will appear in history applying changes to the storage branch.|
+|useremail|Email that will appear in history applying changes to the storage branch.|
