@@ -24,6 +24,10 @@ inputs:
     description: "Commit message associated with this modification in storage branch"
     required: false
     default: Update storage contents
+  username:
+    description: "Git username that will appear in history applying changes to the storage branch"
+    required: false
+    default: Branch Storage Action
 
 runs:
   
@@ -38,3 +42,4 @@ runs:
         comment: "${{inputs.comment}}"
         storage_branch: "${{inputs.storage-branch}}"
         prune: "${{inputs.prune}}"
+        username: "${{inputs.username}}"
