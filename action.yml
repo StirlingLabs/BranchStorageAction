@@ -38,3 +38,4 @@ runs:
         comment: "${{inputs.comment}}"
         storage_branch: "${{inputs.storage-branch}}"
         prune: "${{inputs.prune}}"
+        GITHUB_TOKEN: ${{ github.token }}
