@@ -84,12 +84,19 @@ prune-storage(){
 
 
 main(){
-	if [[ "$CI" == "true" ]]; then
+	if [[ -n "$GITHUB_ACTOR" ]]; then
 		acceptHead="Accept: application/vnd.github.v3+json"
 		apiUrl="https://api.github.com/users/$GITHUB_ACTOR"
 		userId=$( curl -H "Authorization: token $GITHUB_TOKEN" -H "$acceptHead" "$apiUrl" | jq '.id' )
-		git config --global user.email "$userId+$GITHUB_ACTOR@users.noreply.github.com"
 		git config --global user.name "$GITHUB_ACTOR"
+		if [[ -n "$userId" ]]; then
+			git config --global user.email "$userId+$GITHUB_ACTOR@users.noreply.github.com"
+		else
+			git config --global user.email "branch.storage@github.action"
+		fi
+	else
+		git config --global user.name "Branch Storage Action"
+		git config --global user.email "branch.storage@github.action"
 	fi
 
 	# Create or checkout the storage branch in a worktree
