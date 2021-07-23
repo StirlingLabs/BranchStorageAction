@@ -94,7 +94,7 @@ main(){
 		else
 			git config --global user.email "branch.storage@github.action"
 		fi
-	else
+	elif [[ "$CI" == "true" ]]; then
 		git config --global user.name "Branch Storage Action"
 		git config --global user.email "branch.storage@github.action"
 	fi
