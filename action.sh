@@ -89,7 +89,7 @@ main(){
 		apiUrl="https://api.github.com/users/$GITHUB_ACTOR"
 		userId=$( curl -H "Authorization: token $GITHUB_TOKEN" -H "$acceptHead" "$apiUrl" | jq '.id' )
 		git config --global user.name "$GITHUB_ACTOR"
-		if [[ -n "$userId" ]]; then
+		if [[ -n "$userId" ]] || [[ "$userId" -eq "null"]]; then
 			git config --global user.email "$userId+$GITHUB_ACTOR@users.noreply.github.com"
 		else
 			git config --global user.email "branch.storage@github.action"
