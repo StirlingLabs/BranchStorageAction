@@ -1,5 +1,7 @@
 # 🎋 Branch Storage Action
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/dd0de769335b47aa98f284854becc383)](https://www.codacy.com/gh/StirlingLabs/BranchStorageAction/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StirlingLabs/BranchStorageAction&amp;utm_campaign=Badge_Grade)
+
 > Store files on an orphan branch of a repo dedicated for static storage
 
 ## ⭐ Features
