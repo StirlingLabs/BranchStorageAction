@@ -9,7 +9,7 @@ checkout-storage-branch(){
 	worktree_path=/tmp/$storage_branch-$(date +%s)
 	
 	# if the branch already exists, grab it
-	git fetch -f --update-shallow origin $storage_branch
+	git fetch -f --update-shallow origin $storage_branch || exit $?
 
 	if [ $? -ne 0 ]; then
 		# virtually create an orphan branch
@@ -20,10 +20,10 @@ checkout-storage-branch(){
 		mkdir -p $worktree_path
 		
 		# create a worktree for the orphan
-		git worktree add -b $storage_branch $worktree_path $empty_commit	
+		git worktree add -b $storage_branch $worktree_path $empty_commit || exit $?	
 	else
 		# use the existing branch
-		git worktree add --checkout --track $worktree_path $storage_branch
+		git worktree add --checkout --track $worktree_path $storage_branch || exit $?
 	fi
 	
 	# return the worktree path
@@ -45,17 +45,17 @@ append-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r $src $abs_dst_path
+	cp -r $src $abs_dst_path || exit $?
 
 	# get back to the worktree root
-	cd $storage_local_path
+	cd $storage_local_path || exit $?
 
 	# add, commit and push the new content
-	git add .
+	git add . || exit $?
 	( git commit -m "$comment" && git push origin HEAD:$storage_branch ) || echo "No changes in storage branch." > /dev/stderr
 	
 	# go back to the working directory
-	cd -
+	cd - || exit $?
 }
 
 
@@ -77,13 +77,13 @@ prune-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r $src $abs_dst_path
+	cp -r $src $abs_dst_path || exit $?
 
 	# get back to the worktree root
-	cd $storage_local_path
+	cd $storage_local_path || exit $?
 
 	# add, commit and push the new content
-	git add -A .
+	git add -A . || exit $?
 	( git commit -m "$comment" && git push origin HEAD:$storage_branch ) || echo "No changes in storage branch." > /dev/stderr
 	
 	# go back to the working directory
@@ -117,17 +117,17 @@ main(){
 		prune-storage $storage_local_path
 	fi
 
-	cd $storage_local_path
+	cd $storage_local_path || exit $?
 
 	storage_branch=$(git branch --show-current)
 
-	cd -
+	cd - || exit $?
 
-	git worktree remove -f $storage_local_path
+	git worktree remove -f $storage_local_path || exit $?
 
-	git branch -D $storage_branch
+	git branch -D $storage_branch || exit $?
 
-	rm -rf $storage_local_path
+	rm -rf $storage_local_path || exit $?
 }
 
 main
