@@ -9,7 +9,7 @@ checkout-storage-branch(){
 	worktree_path=/tmp/$storage_branch-$(date +%s)
 	
 	# if the branch already exists, grab it
-	git fetch -f --update-shallow origin $storage_branch || exit $?
+	git fetch -f --update-shallow origin $storage_branch
 
 	if [ $? -ne 0 ]; then
 		echo "Creating storage branch: $storage_branch"
