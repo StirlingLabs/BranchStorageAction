@@ -45,7 +45,7 @@ append-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r "$src" "$abs_dst_path" || exit $?
+	cp -r $src "$abs_dst_path" || exit $?
 
 	# get back to the worktree root
 	cd "$storage_local_path" || exit $?
@@ -79,7 +79,7 @@ prune-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r "$src" "$abs_dst_path" || exit $?
+	cp -r $src "$abs_dst_path" || exit $?
 
 	# get back to the worktree root
 	cd "$storage_local_path" || exit $?
