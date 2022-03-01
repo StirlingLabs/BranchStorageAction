@@ -12,6 +12,7 @@ checkout-storage-branch(){
 	git fetch -f --update-shallow origin $storage_branch || exit $?
 
 	if [ $? -ne 0 ]; then
+		echo "Creating storage branch: $storage_branch"
 		# virtually create an orphan branch
 		empty_tree=$(git hash-object -w -t tree /dev/null)
 		empty_commit=$(git commit-tree "$empty_tree" -m "Created storage branch.")	
@@ -22,6 +23,7 @@ checkout-storage-branch(){
 		# create a worktree for the orphan
 		git worktree add -b $storage_branch $worktree_path $empty_commit || exit $?	
 	else
+		echo "Using storage branch: $storage_branch"
 		# use the existing branch
 		git worktree add --checkout --track $worktree_path $storage_branch || exit $?
 	fi
@@ -52,7 +54,9 @@ append-storage(){
 
 	# add, commit and push the new content
 	git add . || exit $?
-	( git commit -m "$comment" && git push origin HEAD:$storage_branch ) || echo "No changes in storage branch." > /dev/stderr
+
+	echo "Pushing $storage_branch..."
+	( git commit -m "$comment" && git push origin "HEAD:$storage_branch" ) || echo "No changes in storage branch." > /dev/stderr
 	
 	# go back to the working directory
 	cd - || exit $?
@@ -84,7 +88,9 @@ prune-storage(){
 
 	# add, commit and push the new content
 	git add -A . || exit $?
-	( git commit -m "$comment" && git push origin HEAD:$storage_branch ) || echo "No changes in storage branch." > /dev/stderr
+
+	echo "Pushing $storage_branch..."
+	( git commit -m "$comment" && git push origin "HEAD:$storage_branch" ) || echo "No changes in storage branch." > /dev/stderr
 	
 	# go back to the working directory
 	cd -
@@ -122,6 +128,8 @@ main(){
 	storage_branch=$(git branch --show-current)
 
 	cd - || exit $?
+
+	echo "Removing local storage branch $storage_branch and worktree: $storage_local_path"
 
 	git worktree remove -f $storage_local_path || exit $?
 
