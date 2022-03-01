@@ -38,7 +38,11 @@ append-storage(){
 	abs_dst_path=$storage_local_path/$dst
 
 	# create it if it doesn't exist
-	mkdir -p $(dirname $abs_dst_path)
+	if [[ "${dst:~0}" -eq "/" ]] ; then
+		mkdir -p $abs_dst_path
+	else
+		mkdir -p $(dirname $abs_dst_path)
+	fi
 	
 	# copy the new content over
 	cp -r $src $abs_dst_path
@@ -66,7 +70,11 @@ prune-storage(){
 	rm -rf $abs_dst_path
 
 	# recreate it
-	mkdir -p $(dirname $abs_dst_path)
+	if [[ "${dst:~0}" -eq "/" ]] ; then
+		mkdir -p $abs_dst_path
+	else
+		mkdir -p $(dirname $abs_dst_path)
+	fi
 	
 	# copy the new content over
 	cp -r $src $abs_dst_path
