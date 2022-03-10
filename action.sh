@@ -66,7 +66,7 @@ prune-storage(){
 		abs_dst_path=$worktree_path
 		# wipe out the existing directory
 		cd $abs_dst_path
-		GLOBIGNORE=".git:**/.git;.:..:" rm -rf *
+		GLOBIGNORE=".git:**/.git;.:.." rm -rf *
 	else
 		abs_dst_path=$worktree_path/$dst
 		# wipe out the existing directory
@@ -148,7 +148,7 @@ main(){
 
 # make sure that we are copying .files
 set -x
-declare -n GLOBIGNORE=".git:**/.git;.:..:"
+declare -x GLOBIGNORE=".git:**/.git;.:.."
 shopt -s dotglob
 # run main
 main
