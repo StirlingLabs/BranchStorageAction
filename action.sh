@@ -124,7 +124,7 @@ main(){
 	checkout-storage-branch
 	echo "Local storage path: $worktree_path" > /dev/stderr
 	
-	if [[ "$prune" != 'true' ]]; then
+	if [[ "$prune" != "true" ]]; then
 		append-storage
 	else
 		prune-storage
