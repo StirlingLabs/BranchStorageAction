@@ -48,6 +48,7 @@ append-storage(){
 	cd "$worktree_path" || exit $?
 
 	# add, commit and push the new content
+	echo "Marking changes..."
 	git add . || exit $?
 
 	echo "Pushing $storage_branch..."
@@ -79,14 +80,16 @@ prune-storage(){
 	fi
 	
 	# copy the new content over
-	echo copying from $src to $abs_dst_path
+	GLOBIGNORE=".:..:.git" echo copying from \( $src \) to "$abs_dst_path"
 	GLOBIGNORE=".:..:.git" cp -r $src "$abs_dst_path" || exit $?
 
-	ls -la $src
 	# get back to the worktree root
 	cd "$worktree_path" || exit $?
 
+	echo "Worktree directory after copying:"
 	ls -la
+
+	echo "Marking changes..."
 	# add, commit and push the new content
 	git add -A . || exit $?
 
@@ -143,6 +146,7 @@ main(){
 }
 
 # make sure that we are copying .files
+set -x
 shopt -s dotglob
 # run main
 main
