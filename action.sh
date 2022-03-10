@@ -42,7 +42,7 @@ append-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." echo $src)" "$abs_dst_path" || exit $?
+	cp -r "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." compgen -G "$src")" "$abs_dst_path" || exit $?
 
 	# get back to the worktree root
 	cd "$worktree_path" || exit $?
@@ -65,8 +65,7 @@ prune-storage(){
 	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
 		abs_dst_path=$worktree_path
 		# wipe out the existing directory
-		cd $abs_dst_path
-		rm -rf "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." echo *)"
+		rm -rf "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." compgen -G "$abs_dst_path/*")"
 	else
 		abs_dst_path=$worktree_path/$dst
 		# wipe out the existing directory
@@ -81,7 +80,7 @@ prune-storage(){
 	fi
 	
 	# copy the new content over
-	echo copying from \( "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." echo $src)" \) to "$abs_dst_path"
+	echo copying from \( "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." compgen -G "$src")" \) to "$abs_dst_path"
 	cp -r "$(shopt -s dotglob; GLOBIGNORE=".git:**/.git;.:.." echo $src)" "$abs_dst_path" || exit $?
 
 	# get back to the worktree root
