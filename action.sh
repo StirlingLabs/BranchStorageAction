@@ -64,6 +64,7 @@ prune-storage(){
 	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
 		abs_dst_path=$worktree_path
 		# wipe out the existing directory
+		echo "$GLOBIGNORE"
 		rm -rf $abs_dst_path/*
 	else
 		abs_dst_path=$worktree_path/$dst
