@@ -1,13 +1,8 @@
 #!/usr/bin/bash
 checkout-storage-branch(){
-	declare -n worktree_path=$1
-	
 	# get default remote url
 	#remote_url=$(git remote get-url origin)
 
-	# clone repo in another directory
-	worktree_path=/tmp/$storage_branch-$(date +%s)
-	
 	# if the branch already exists, grab it
 	if ! (git fetch -f --update-shallow origin "$storage_branch"); then
 		echo "Creating storage branch: $storage_branch"
@@ -31,11 +26,13 @@ checkout-storage-branch(){
 }
 
 append-storage(){
-	storage_local_path="$1"
-
 	echo "Appending content to $storage_branch:$dst" > /dev/stderr
 
-	abs_dst_path=$storage_local_path/$dst
+	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
+		abs_dst_path=$worktree_path
+	else
+		abs_dst_path=$worktree_path/$dst
+	fi
 
 	# create it if it doesn't exist
 	if [[ "${dst: -1}" = '/' ]] ; then
@@ -48,7 +45,7 @@ append-storage(){
 	cp -r $src "$abs_dst_path" || exit $?
 
 	# get back to the worktree root
-	cd "$storage_local_path" || exit $?
+	cd "$worktree_path" || exit $?
 
 	# add, commit and push the new content
 	git add . || exit $?
@@ -62,14 +59,17 @@ append-storage(){
 
 
 prune-storage(){
-	storage_local_path="$1"
-
 	echo "Pruning missing and appending new content in $storage_branch:$dst" > /dev/stderr
-
-	abs_dst_path=$storage_local_path/$dst
-
-	# wipe out the existing directory
-	rm -rf "$abs_dst_path"
+	
+	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
+		abs_dst_path=$worktree_path
+		# wipe out the existing directory
+		rm -rf $abs_dst_path/*
+	else
+		abs_dst_path=$worktree_path/$dst
+		# wipe out the existing directory
+		rm -rf $abs_dst_path
+	fi
 
 	# recreate it
 	if [[ "${dst: -1}" = '/' ]] ; then
@@ -79,11 +79,14 @@ prune-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r $src "$abs_dst_path" || exit $?
+	echo copying from $src to $abs_dst_path
+	cp -r $src $abs_dst_path || exit $?
 
+	ls -la $src
 	# get back to the worktree root
-	cd "$storage_local_path" || exit $?
+	cd "$worktree_path" || exit $?
 
+	ls -la
 	# add, commit and push the new content
 	git add -A . || exit $?
 
@@ -111,17 +114,20 @@ main(){
 		git config --global user.email "branch.storage@github.action"
 	fi
 
+	# worktree is safe place to store the content
+	worktree_path=/tmp/$storage_branch-$(date +%s)
+
 	# Create or checkout the storage branch in a worktree
-	checkout-storage-branch storage_local_path
-	echo "Local storage path: $storage_local_path" > /dev/stderr
+	checkout-storage-branch
+	echo "Local storage path: $worktree_path" > /dev/stderr
 	
 	if [[ "$prune" != 'true' ]]; then
-		append-storage "$storage_local_path"
+		append-storage
 	else
-		prune-storage "$storage_local_path"
+		prune-storage
 	fi
 
-	cd "$storage_local_path" || exit $?
+	cd "$worktree_path" || exit $?
 
 	storage_branch="$(git branch --show-current)"
 
@@ -129,11 +135,15 @@ main(){
 
 	echo "Removing local storage branch $storage_branch and worktree: $storage_local_path"
 
-	git worktree remove -f "$storage_local_path" || exit $?
+	git worktree remove -f "$worktree_path" || exit $?
 
 	git branch -D "$storage_branch" || exit $?
 
-	rm -rf "$storage_local_path" || exit $?
+	rm -rf "$worktree_path" || exit $?
 }
 
+# make sure that we are copying .files
+declare -x GLOBIGNORE=".:..:.git"
+shopt -s dotglob
+# run main
 main
