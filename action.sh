@@ -29,9 +29,9 @@ append-storage(){
 	echo "Appending content to $storage_branch:$dst" > /dev/stderr
 
 	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
-		abs_dst_path=$worktree_path
+		abs_dst_path="$worktree_path"
 	else
-		abs_dst_path=$worktree_path/$dst
+		abs_dst_path="$worktree_path/$dst"
 	fi
 
 	# create it if it doesn't exist
@@ -42,7 +42,7 @@ append-storage(){
 	fi
 	
 	# copy the new content over
-	cp -r $src "$abs_dst_path" || exit $?
+	GLOBIGNORE=".:..:.git" cp -r $src "$abs_dst_path" || exit $?
 
 	# get back to the worktree root
 	cd "$worktree_path" || exit $?
@@ -64,8 +64,7 @@ prune-storage(){
 	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
 		abs_dst_path=$worktree_path
 		# wipe out the existing directory
-		echo "$GLOBIGNORE"
-		rm -rf $abs_dst_path/*
+		GLOBIGNORE=".:..:.git" rm -rf $abs_dst_path/*
 	else
 		abs_dst_path=$worktree_path/$dst
 		# wipe out the existing directory
@@ -81,7 +80,7 @@ prune-storage(){
 	
 	# copy the new content over
 	echo copying from $src to $abs_dst_path
-	cp -r $src $abs_dst_path || exit $?
+	GLOBIGNORE=".:..:.git" cp -r $src "$abs_dst_path" || exit $?
 
 	ls -la $src
 	# get back to the worktree root
@@ -144,7 +143,6 @@ main(){
 }
 
 # make sure that we are copying .files
-declare -x GLOBIGNORE=".:..:.git"
 shopt -s dotglob
 # run main
 main
