@@ -65,7 +65,8 @@ prune-storage(){
 	if [[ "$dst" == "." || "$dst" == "/" ]] ; then
 		abs_dst_path=$worktree_path
 		# wipe out the existing directory
-		rm -rf $abs_dst_path/*
+		cd $abs_dst_path
+		GLOBIGNORE=".git:**/.git;.:..:" rm -rf *
 	else
 		abs_dst_path=$worktree_path/$dst
 		# wipe out the existing directory
