@@ -147,7 +147,7 @@ main(){
 
 # make sure that we are copying .files
 set -x
-GLOBIGNORE=".:..:**/.git"
+declare -n GLOBIGNORE=".git:**/.git;.:..:"
 shopt -s dotglob
 # run main
 main
